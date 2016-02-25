@@ -1,0 +1,255 @@
+<!--
+点击不用input ：
+因为有一些手机readonly会失效
+
+点击用input：
+onfocus="this.blur()"禁用
+设置值很方便，样式受到限制
+
+-->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width,minimum-scale=1,maximum-scale=1">
+	<title>selector</title>
+	<style>
+	body,html{
+        margin: 0;
+        padding: 0;
+    }
+	.v-hide{
+		visibility: hidden;
+	}
+    /*html,
+    body {
+        height: 100%;
+        width: 100%;
+    }*/
+
+    .slide-wapper {
+        /*height: 100%;*/
+        overflow-y: scroll;
+    }
+
+    .slide-item {
+        background: #EAC8AE;
+    }
+
+
+	.hide{
+		display: none;
+	}
+	.mr10{
+		margin-right:10px;
+	}
+	/*遮罩*/
+	.selector-mask{
+		position: fixed;
+		top:0;
+		left:0;
+		right:0;
+		bottom:0;
+		z-index: 9998;
+	}
+	/*选中的线*/
+	.selector-line{
+		position: absolute;
+		top:50%;
+		width: 100%;
+		z-index: 998;
+		border-top:1px solid #ccc;
+		border-bottom:1px solid #ccc;
+	}
+	.selector-main{
+		box-sizing:border-box;
+		position: fixed;
+		bottom:0;
+		left:0;
+		width: 100%;
+		z-index: 9999;
+		-webkit-transition: all .2s ease-in;
+			transition: all .2s ease-in;
+	}
+	.selector-main.down{
+		transform:translateY(100%);
+		-webkit-transform:translateY(100%);
+	}
+	.selector-header{
+		position: relative;
+		height:60px;
+		line-height:60px;
+		text-align: center;
+		background: #fff;
+	}
+	.selector-list{
+		overflow: hidden;
+		z-index:999;
+		background: #FFF;
+		position: relative;
+
+	}
+
+	.selector-list ul{
+		width: 100%;
+		float:left;
+		text-align: center;
+		position: relative;
+		z-index: 999;
+		overflow-x: hidden;
+		list-style:none;
+		margin:0;
+		padding: 0;
+	}
+	.selector-list li{
+		padding-left:3%;
+		padding-right: 3%;
+		height:40px;
+		line-height: 40px;
+		color:#999;
+		-webkit-transition: all .2s ease-in;
+		transition: all .2s ease-in;
+	}
+
+	.selector-list li.active{
+		color:#333;
+		-webkit-transform:scale(1.2);
+		transform:scale(1.2);
+	}
+
+	.selector-list.level-2 ul{
+		width: 50%;
+	}
+	/*按钮*/
+	.selector-confirm,.selector-cancel{
+		position: absolute;
+		top:0;
+		color:#333;
+		padding:0 20px;
+		display: block;
+		text-decoration: none;
+	}
+	.selector-cancel{
+		left: 5%;
+	}
+	.selector-confirm{
+		right:5%;
+	}
+
+	/*自定义样式*/
+	.select-value,.select-value2{
+		width: 100%;
+		height: 30px;
+		border:1px solid #ccc;
+	}
+	</style>
+</head>
+<body>
+<div class="slide-wapper">
+    <div class="slide-item">
+		<div class="console"></div>
+    		页面一
+            <br> 页面一<br> 页面一<br> 页面一<br> 页面一<br> 页面一
+            <input type="text" class="select-value" value="yyy-啦啦啦333" readonly="true">
+			<br><br>
+            <div class="select-input2" data-input=".select-value2">
+            	请点击这里选择
+            </div>
+            <input type="text" class="select-value2" value="收到额外人 饿的方式度过333 饿的方式度过" readonly="true">
+
+            <br> 页面一<br> 页面一<br> 页面一<br> 页面一<br> 页面一<br> 页面一<br> 页面一<br> 页面一<br> 页面一<br> 页面一<br> 页面一<br> 页面一<br> 页面一<br> 页面一<br> 页面一<br> 页面一<br> 页面一<br> 页面一<br> 页面一<br> 页面一<br> 页面一<br> 页面一<br> 页面一<br> 页面一<br> 页面一<br> 页面一<br> 页面一<br> 页面一<br> 页面一<br> 页面一<br> 页面一<br> 页面一<br> 页面一<br> 页面一<br> 页面一<br> 页面一<br> 页面一<br> 页面一<br> 页面一<br> 页面一<br> 页面一<br> 页面一<br> 页面一<br> 页面一<br> 页面一<br> 页面一<br> 页面一<br> 页面一<br>
+
+	</div>
+</div>
+<!-- <div class="selector-main  v-hide down">
+	<div class="title">
+		<a href="javascript:;" class="selector-cancel">取消</a>
+		<a href="javascript:;" class="selector-confirm">确定</a>
+	</div>
+	<div class="selector-list">
+
+	</div>
+</div> -->
+<!-- <div class="selector-mask hide"></div> -->
+<script src="http://libs.baidu.com/jquery/2.1.4/jquery.min.js"></script>
+<script src="select-wap.js"></script>
+<script>
+	var level1=[{ "name":'333333333', "value":'1' },{ "name":'饿的方式度过', "value":'2' },{ "name":'收到额外人', "value":'3' },{ "name":'啦啦啦', "value":'4' },{ "name":'饿的方式度过', "value":'5' },{ "name":'收到额外人', "value":'6' },{ "name":'啦啦啦', "value":'1' },{ "name":'饿的方式度过', "value":'2' },{ "name":'收到额外人', "value":'3' },{ "name":'啦啦啦', "value":'4' },{ "name":'饿的方式度过', "value":'5' },{ "name":'收到额外人', "value":'6' }];
+	var level2=[{ "name":'啦啦啦', "value":'1' },{ "name":'饿的方式度过', "value":'2' },{ "name":'收到额外人', "value":'3' },{ "name":'啦啦啦', "value":'4' },{ "name":'饿的方式度过', "value":'5' },{ "name":'收到额外人', "value":'6' }];
+	var level3=[{ "name":'111', "value":'1', "child":[{ "name":'222', "value":'3', "child":[{ "name":'fff', "value":'3' },{ "name":'ggg', "value":'4' },{ "name":'hhh', "value":'5' },{ "name":'yyy', "value":'6' }] },{ "name":'333', "value":'4', "child":[{ "name":'222', "value":'3' },{ "name":'333', "value":'4' },{ "name":'4444', "value":'5' },{ "name":'555', "value":'6' }] },{ "name":'4444', "value":'5', "child":[{ "name":'222', "value":'3' },{ "name":'333', "value":'4' },{ "name":'4444', "value":'5' },{ "name":'555', "value":'6' }] },{ "name":'555', "value":'6', "child":[{ "name":'fff', "value":'3' },{ "name":'ggg', "value":'4' },{ "name":'hhh', "value":'5' },{ "name":'yyy', "value":'6' }] },{ "name":'4444', "value":'5', "child":[{ "name":'fff', "value":'3' },{ "name":'ggg', "value":'4' },{ "name":'hhh', "value":'5' },{ "name":'yyy', "value":'6' }] },{ "name":'555', "value":'6', "child":[{ "name":'fff', "value":'3' },{ "name":'ggg', "value":'4' },{ "name":'hhh', "value":'5' },{ "name":'yyy', "value":'6' }] }] },{ "name":'ddd', "value":'2', "child":[{ "name":'fff', "value":'3' },{ "name":'ggg', "value":'4' },{ "name":'hhh', "value":'5' },{ "name":'yyy', "value":'6' }] },{ "name":'www', "value":'3', "child":[{ "name":'收到额外人', "value":'3' },{ "name":'啦啦啦', "value":'4' },{ "name":'饿的方式度过', "value":'5' },{ "name":'收到额外人', "value":'6' }] },{ "name":'rrr', "value":'4', "child":[{ "name":'收到额外人', "value":'3' },{ "name":'啦啦啦', "value":'4' },{ "name":'饿的方式度过', "value":'5' },{ "name":'收到额外人', "value":'6' }] },{ "name":'yyy', "value":'5', "child":[{ "name":'收到额外人', "value":'3' },{ "name":'啦啦啦', "value":'4' },{ "name":'饿的方式度过', "value":'5' },{ "name":'收到额外人', "value":'6' }] },{ "name":'uuu', "value":'6', "child":[{ "name":'收到额外人', "value":'3' },{ "name":'啦啦啦', "value":'4' },{ "name":'饿的方式度过', "value":'5' },{ "name":'收到额外人', "value":'6' }] }];
+	var level4=[{ "name":'444444', "value":'1', "child":[{ "name":'222', "value":'3', "child":[{ "name":'fff', "value":'3' },{ "name":'ggg', "value":'4' },{ "name":'hhh', "value":'5' },{ "name":'yyy', "value":'6' }] },{ "name":'333', "value":'4', "child":[{ "name":'222', "value":'3' },{ "name":'333', "value":'4' },{ "name":'4444', "value":'5' },{ "name":'555', "value":'6' }] },{ "name":'4444', "value":'5', "child":[{ "name":'222', "value":'3' },{ "name":'333', "value":'4' },{ "name":'4444', "value":'5' },{ "name":'555', "value":'6' }] },{ "name":'555', "value":'6', "child":[{ "name":'fff', "value":'3' },{ "name":'ggg', "value":'4' },{ "name":'hhh', "value":'5' },{ "name":'yyy', "value":'6' }] },{ "name":'4444', "value":'5', "child":[{ "name":'fff', "value":'3' },{ "name":'ggg', "value":'4' },{ "name":'hhh', "value":'5' },{ "name":'yyy', "value":'6' }] },{ "name":'555', "value":'6', "child":[{ "name":'fff', "value":'3' },{ "name":'ggg', "value":'4' },{ "name":'hhh', "value":'5' },{ "name":'yyy', "value":'6' }] }] },{ "name":'ddd', "value":'2', "child":[{ "name":'fff', "value":'3' },{ "name":'ggg', "value":'4' },{ "name":'hhh', "value":'5' },{ "name":'yyy', "value":'6' }] },{ "name":'www', "value":'3', "child":[{ "name":'收到额外人', "value":'3' },{ "name":'啦啦啦', "value":'4' },{ "name":'饿的方式度过', "value":'5' },{ "name":'收到额外人', "value":'6' }] },{ "name":'rrr', "value":'4', "child":[{ "name":'收到额外人', "value":'3' },{ "name":'啦啦啦', "value":'4' },{ "name":'饿的方式度过', "value":'5' },{ "name":'收到额外人', "value":'6' }] },{ "name":'yyy', "value":'5', "child":[{ "name":'收到额外人', "value":'3' },{ "name":'啦啦啦', "value":'4' },{ "name":'饿的方式度过', "value":'5' },{ "name":'收到额外人', "value":'6' }] },{ "name":'uuu', "value":'6', "child":[{ "name":'收到额外人', "value":'3' },{ "name":'啦啦啦', "value":'4' },{ "name":'饿的方式度过', "value":'5' },{ "name":'收到额外人', "value":'6' }] }];
+
+//level与data个数要相等
+//method接口方法:toggle,show,hide,setOne,setTwo
+var method=$('.select-value').selectList({
+	//层级，决定选择框是几等分
+	level:3,
+	//Linkpage：false时才有data1,data2,data3
+	data1:level1,
+	data2:level2,
+	data3:level2,
+	//Linkpage：true时才有ddataLink
+	dataLink:level3,//有关联
+	Linkpage:true,
+	//显示行数
+	line:6,
+	//显示高度
+	// height:40,
+	//是否有默认值,默认为false
+	idDefault:true,
+	//分割字符，默认为' '
+	splitStr:'-',
+	//标题html
+	header:'<div class="selector-header">这是真的<a href="javascript:;" class="selector-cancel">取消</a><a href="javascript:;" class="selector-confirm">确定</a></div>',
+	afterOne:function(result){
+		// console.info(result.target.html())
+	},
+	afterTwo:function(result){
+		//console.info(result.target.html())
+	},
+	afterThree:function(result){
+		//console.info(result.target.html())
+	},
+	confirm:function(){
+		method.updateData(level4);
+		console.info($('.select-value').data('id1')+'-'+$('.select-value').data('id2')+'-'+$('.select-value').data('id3'));
+	},
+	cancel:function(){
+		console.info($('.select-value').data('id1')+'-'+$('.select-value').data('id2')+'-'+$('.select-value').data('id3'));
+	}
+})
+
+// console.info(method)
+// method.show();
+// method.hide();
+var method2Data=[level2,level1,level1];
+console.info(method2Data);
+
+var method2=$('.select-input2').selectList({
+	level:3,
+	data1:level1,
+	data2:level2,
+	data3:level2,
+	line:5,
+	// height:40,
+	dataLink:level3,//有关联
+	Linkpage:false,
+	idDefault:true,
+	afterOne:function(result){
+		// console.info(result.target.html())
+	},
+	afterTwo:function(result){
+		//console.info(result.target.html())
+	},
+	afterThree:function(result){
+		//console.info(result.target.html())
+	},
+	confirm:function(){
+		method2.updateData([level2,level1,level1]);
+		//console.info($('.select-value2').data('id1')+'-'+$('.select-value2').data('id2')+'-'+$('.select-value2').data('id3'));
+	}
+})
+</script>
+</body>
+</html>
