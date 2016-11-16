@@ -1,7 +1,10 @@
 # mobile selector
 手机端模拟iphone select选择组件，最多可渲染三级数据
 
-参数列表
+##在线例子demo
+<a href="http://codepen.io/qiuyaofan/pen/VmKdPO">http://codepen.io/qiuyaofan/pen/VmKdPO</a>
+
+##参数列表
 
 手机端模拟选择－2级
 ```php
@@ -22,7 +25,7 @@ confirm:function(){} [确定回调]
 cancel:function(){} [取消回调]
 @return deffered{‘show’:fn,’hide’:fn,’updateData’:fn}
 ```
-组件特色
+##组件特色
 1.除了组件自带需要的样式，需要用户额外编写的css基本没有，除了想修改选择插件每个li的高度。
 
 2.json格式默认为：
@@ -46,7 +49,7 @@ var method4=$('.select-value4').selectList({
     }
 })
 ```
-为什么要用这个组件
+##QA:为什么要用这个组件
 
 1.除了组件自带需要的样式，需要用户额外编写的css基本没有，除了想修改选择插件每个li的高度。
 2.json格式默认为：
@@ -136,4 +139,5 @@ level3=[
 
 更多详情请看selector-api.html
 
-
+##版本更新：
+2016.11.16 重构代码，增加pc端鼠标事件选择
