@@ -180,12 +180,6 @@ $(function () {
                     jsonData.push(childStr);
                 }
             }
-
-            // if (self.options.level === 2) {
-            //     var childStr = getChildJson(self.options.dataJson[0]);
-            //     jsonData.push(childStr);
-            // }
-            console.info(self.options.level, jsonData)
             listStr = concatHtmlList.call(self, jsonData);
             mainStr = '<div class="mPicker-main ' + self.disy + '" data-pickerId="' + self.pickerId + '">' + self.options.header + '<div class="mPicker-content">' + listStr + '</div><div class="mPicker-shadow"></div>' + self.options.footer + '</div>';
             self.mpicker.append(mainStr);
@@ -226,7 +220,7 @@ $(function () {
         },
         showPicker: function () {
             var self = this;
-            self.mpicker.data('object', self);
+            //self.mpicker.data('object', self);
             //元素集合
             //var $content=this.mpickerMain.find('.mPicker-content');
 
@@ -259,7 +253,6 @@ $(function () {
                 var dataVal = self.container.data('id' + (index + 1)) ? self.container.data('id' + (index + 1)) : 0;
                 id.push(dataVal);
             });
-            console.info('dataVal', id)
             //获得选中的元素
             setItemMultiple.call(self, id);
         },
@@ -331,6 +324,8 @@ $(function () {
             this.container.off('touchstart.container click.container').on('touchstart.container click.container', function (e) {
                 e.preventDefault();
                 e.stopPropagation();
+                var $this = $(this);
+                $('.mPicker').data('object', $this.data('mPicker'));
                 self.showPicker();
             });
             //点击确定
@@ -656,7 +651,6 @@ $(function () {
             "-webkit-transform": 'translateY(' + y + 'px)',
             transform: 'translateY(' + y + 'px)'
         });
-        console.info('translateY', obj, y)
     }
     /**
      *  获取translateY
