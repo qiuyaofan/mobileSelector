@@ -170,10 +170,22 @@ $(function () {
              * 添加 mPicker-main元素
              */
             jsonData.push(self.options.dataJson);
-            if (self.options.level === 2) {
-                var childStr = getChildJson(self.options.dataJson[0]);
-                jsonData.push(childStr);
+            /**
+             * 获取二级的第一个选项的data.child
+             */
+            if (self.options.level >= 2) {
+                var childStr = self.options.dataJson;
+                for (var level = 2; level <= self.options.level; level++) {
+                    childStr = getChildJson(childStr[0]);
+                    jsonData.push(childStr);
+                }
             }
+
+            // if (self.options.level === 2) {
+            //     var childStr = getChildJson(self.options.dataJson[0]);
+            //     jsonData.push(childStr);
+            // }
+            console.info(self.options.level, jsonData)
             listStr = concatHtmlList.call(self, jsonData);
             mainStr = '<div class="mPicker-main ' + self.disy + '" data-pickerId="' + self.pickerId + '">' + self.options.header + '<div class="mPicker-content">' + listStr + '</div><div class="mPicker-shadow"></div>' + self.options.footer + '</div>';
             self.mpicker.append(mainStr);
@@ -188,7 +200,7 @@ $(function () {
             //var $itemOne=$listUl.eq(0);
             //var $itemTwo=self.options.level === 2?$listUl.eq(1):false;
             //设置多列宽度
-            self.options.level > 1 ? $list.width(ulWidth[self.options.level - 1]) : false;
+            self.options.level > 1 ? $list.width((100 / self.options.level).toFixed(2) + '%') : false;
 
             //添加选中的边框
             $list.append('<div class="mPicker-active-box"></div>');
@@ -204,8 +216,12 @@ $(function () {
             /**
              * 设置内容高度
              */
-            $content.height(self.options.height * self.options.rows);
-            $list.height(self.options.height * self.options.rows);
+            var containHeight = self.options.height * self.options.rows;
+            $content.height(containHeight);
+            $list.height(containHeight);
+            $list.find('ul').css({
+                'min-height': containHeight + 'px'
+            });
 
         },
         showPicker: function () {
@@ -243,6 +259,7 @@ $(function () {
                 var dataVal = self.container.data('id' + (index + 1)) ? self.container.data('id' + (index + 1)) : 0;
                 id.push(dataVal);
             });
+            console.info('dataVal', id)
             //获得选中的元素
             setItemMultiple.call(self, id);
         },
@@ -439,14 +456,17 @@ $(function () {
     function touchEndFn(ele) {
         clearTimeout(this.timeTouchend);
         var result = setActiveItem.call(this, ele);
-
         var resultId = result.target.data('id');
-
-        var itemIndex = this.mpicker.find('.mPicker-list ul').index(ele);
+        var $item = this.mpicker.find('.mPicker-list ul');
+        var itemIndex = $item.index(ele);
+        var len = $item.length;
         // this.lock=0;
-        //点第一个联动
-        if (this.options.Linkage && itemIndex === 0) {
-            refreshItemTwo.call(this, resultId);
+        //点第一个联动&&不是最后一个，更新html
+        if (this.options.Linkage && itemIndex < (len - 1)) {
+            var childJson = this.options.dataJson[resultId];
+            for (var i = itemIndex + 1; i < len; i++) {
+                childJson = reRenderList.call(this, $item, i, 0, childJson);;
+            }
         }
         //回调函数
         // callbackFnName[itemIndex].call(ele, result);
@@ -485,21 +505,38 @@ $(function () {
         //将name值默认匹配成id，一旦匹配就跳出循环，多个匹配取第一个
         //匹配一级
         nameEach(this.options.dataJson, 0);
+
+        //联动时
+        var childJson = this.options.dataJson;
+        if (this.options.Linkage) {
+            for (var i = 2; i <= this.options.level; i++) {
+                if (defaultId[i - 2]) {
+                    childJson = getChildJson(childJson[defaultId[i - 2]]);
+                    nameEach(childJson, i - 1);
+                }
+            }
+            return;
+        }
+        //非联动
+        for (var i = 2; i <= this.options.level; i++) {
+            nameEach(childJson[i - 1], i - 1);
+        }
+        //非联动
         //匹配二级
-        dataLevel2 = this.options.Linkage ? this.options.dataJson[defaultId[0]] : this.options.dataJson[0];
+        // dataLevel2 = this.options.Linkage ? this.options.dataJson[defaultId[0]] : this.options.dataJson[0];
 
-        if (this.options.Linkage && this.options.level === 2 && defaultId[0] && inputVal.length > 1) {
-            hasLevel2 = 1;
-        }
+        // if (this.options.Linkage && this.options.level === 2 && defaultId[0] && inputVal.length > 1) {
+        //     hasLevel2 = 1;
+        // }
 
-        if (!this.options.Linkage && this.options.level === 2 && inputVal.length > 1) {
-            hasLevel2 = 1;
-        }
+        // if (!this.options.Linkage && this.options.level === 2 && inputVal.length > 1) {
+        //     hasLevel2 = 1;
+        // }
 
-        if (hasLevel2) {
-            dataLevel2 = getChildJson(dataLevel2);
-            nameEach(dataLevel2, 1);
-        }
+        // if (hasLevel2) {
+        //     dataLevel2 = getChildJson(dataLevel2);
+        //     nameEach(dataLevel2, 1);
+        // }
 
     }
     /**
@@ -524,36 +561,38 @@ $(function () {
         };
         return result;
     }
-    /**
-     *  传入第一级index，更新第二级html（联动的情况下）
-     */
-    function refreshItemTwo(index) {
-        //兼容不存在child
-        var $itemTwo = this.mpicker.find('.mPicker-list ul').eq(1);
-        var data = getChildJson(this.options.dataJson[index]);
-        if (this.options.level === 2) {
-            var str = concatHtmlItem.call(this, data);
-            $itemTwo.html(str);
-            setActiveItem.call(this, $itemTwo, 0);
-        }
-    }
+
     /**
      *  传入数组，设置多级html
      *  index:数组
      */
     function setItemMultiple(index) {
         var $item = this.mpicker.find('.mPicker-list ul');
-        var index1 = index[0] ? index[0] : 0;
-        var index2 = index[1] ? index[1] : 0;
-
+        var childJson = this.options.dataJson[index[0]];
+        setActiveItem.call(this, $item.eq(0), index[0]);
+        //联动
         if (this.options.Linkage) {
-            refreshItemTwo.call(this, index1);
+            for (var i = 1; i < index.length; i++) {
+                var _index = index[i] || 0;
+                childJson = reRenderList.call(this, $item, i, _index, childJson);
+            }
+            return;
         }
-        setActiveItem.call(this, $item.eq(0), index1);
+        //不联动
+        for (var i = 1; i < index.length; i++) {
+            var _index = index[i] || 0;
+            setActiveItem.call(this, $item.eq(i), _index);
+        }
+    }
 
-        if (this.options.level === 2) {
-            setActiveItem.call(this, $item.eq(1), index2);
-        }
+    //重新渲染
+    function reRenderList($item, i, _index, childJson) {
+        var data = getChildJson(childJson);
+        var str = concatHtmlItem.call(this, data);
+        $item.eq(i).html(str);
+        setActiveItem.call(this, $item.eq(i), _index);
+        return data[_index];
+
     }
 
     /**
@@ -567,6 +606,7 @@ $(function () {
         var result = ({}).hasOwnProperty.call(data, 'child') ? data.child : [];
         return result;
     }
+
     /**
      *  传入json拼接html，只有li级别
      */
@@ -575,7 +615,8 @@ $(function () {
         var self = this;
         $.each(data, function (index, val) {
             var name = self.options.isshort ? val.shortName : val.name;
-            str += '<li data-value="' + val.value + '" data-id="' + index + '">' + name + '</li>';
+            var value = val.value || val.name;
+            str += '<li data-value="' + value + '" data-id="' + index + '">' + name + '</li>';
         });
         return str;
     }
@@ -615,6 +656,7 @@ $(function () {
             "-webkit-transform": 'translateY(' + y + 'px)',
             transform: 'translateY(' + y + 'px)'
         });
+        console.info('translateY', obj, y)
     }
     /**
      *  获取translateY
