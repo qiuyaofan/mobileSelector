@@ -1,8 +1,9 @@
 # mobile selector
 手机端模拟iphone select选择组件，最多可渲染三级及以上数据
 
-##在线例子demo
-<a href="http://codepen.io/qiuyaofan/pen/VmKdPO">http://codepen.io/qiuyaofan/pen/VmKdPO</a>
+ [在线例子](http://qiuyaofan.github.io/mobileSelector/)
+  
+ [codepen在线例子](http://codepen.io/qiuyaofan/pen/VmKdPO">http://codepen.io/qiuyaofan/pen/VmKdPO) 
 
 ##参数列表
 
