@@ -457,18 +457,35 @@ $(function () {
         var len = $item.length;
         // this.lock=0;
         //点第一个联动&&不是最后一个，更新html
+        
         if (this.options.Linkage && itemIndex < (len - 1)) {
-            var childJson = this.options.dataJson[resultId];
-            for (var i = itemIndex + 1; i < len; i++) {
-                childJson = reRenderList.call(this, $item, i, 0, childJson);;
+            var childJson = this.options.dataJson[getActiveId($item, 0)];
+            var str;
+            for (var i = 2; i <= len; i++) {
+                var data = getChildJson(childJson);
+                if (i>itemIndex + 1){
+                    str = concatHtmlItem.call(this, data);
+                    $item.eq(i-1).html(str);
+                    setActiveItem.call(this, $item.eq(i-1), 0);
+                    childJson = data[0];
+                }else{
+                    childJson = data[getActiveId($item, i-1)];
+                }
+                
             }
         }
         //回调函数
         // callbackFnName[itemIndex].call(ele, result);
-
         changeTime(400, ele);
 
         moveStartLock = false;
+    }
+    
+    /**
+     *  获取id
+     */
+    function getActiveId($item,index){
+        return $item.eq(index).find('li.active').data('id')
     }
 
     /**
@@ -516,22 +533,6 @@ $(function () {
         for (var i = 2; i <= this.options.level; i++) {
             nameEach(childJson[i - 1], i - 1);
         }
-        //非联动
-        //匹配二级
-        // dataLevel2 = this.options.Linkage ? this.options.dataJson[defaultId[0]] : this.options.dataJson[0];
-
-        // if (this.options.Linkage && this.options.level === 2 && defaultId[0] && inputVal.length > 1) {
-        //     hasLevel2 = 1;
-        // }
-
-        // if (!this.options.Linkage && this.options.level === 2 && inputVal.length > 1) {
-        //     hasLevel2 = 1;
-        // }
-
-        // if (hasLevel2) {
-        //     dataLevel2 = getChildJson(dataLevel2);
-        //     nameEach(dataLevel2, 1);
-        // }
 
     }
     /**
