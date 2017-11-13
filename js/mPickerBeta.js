@@ -286,6 +286,7 @@ $(function () {
                 self.container.data('value' + (i + 1), '');
             }
             self.options.dataJson = data;
+            self.container.val('');
             self.mpicker.find('.mPicker-main').remove();
         },
         confirm: function () {

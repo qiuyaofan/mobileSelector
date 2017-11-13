@@ -38,6 +38,8 @@
     <div class="slide-wapper">
         <div class="slide-item">
             <div class="console"></div>
+                <h4>调试查看选择的数据，请打开控制台看输出信息</h4>
+                <br>
                 <h4>三级城市联动选择</h4>
                 <input type="text" class="select-value form-control" value="广东省-东莞市">
                 <br>
@@ -59,7 +61,7 @@
                 <pre>
 //模拟数据都在json.js里
 两级联动选择插件调用：
-$('.select-value').mPicker({
+$('.select-value1').mPicker({
     //级别
     level:2,
     //需要渲染的json，二级联动的需要嵌套子元素，有一定的json格式要求
@@ -115,14 +117,23 @@ $('.select-value').mPicker({
             splitStr:'-',
             header:'<div class="mPicker-header">三级联动选择插件</div>',
             confirm:function(){
-                //console.info($('.select-value').data('value1')+'-'+$('.select-value').data('value2'));
+                console.info('【json里有不带value时】');
+                console.info('选中的id序号为：',$('.select-value').data('id1')+'-'+$('.select-value').data('id2')+'-'+$('.select-value').data('id3'));
+                var id1= $('.select-value').data('id1');
+                var id2 = $('.select-value').data('id2');
+                var id3 = $('.select-value').data('id3');
+                console.info('第一列json：',city3[id1]);
+                console.info('第二列json：', city3[id1].child[id2]);
+                console.info('第三列json：', city3[id1].child[id2].child[id3]);
             },
             cancel:function(){
-                //console.info($('.select-value').data('value1')+'-'+$('.select-value').data('value2'));
+                console.info('返回之前的id序号：',$('.select-value').data('id1')+'-'+$('.select-value').data('id2')+'-'+$('.select-value').data('id3'));
             }
         })
-        // var method= $('.select-value').data('mPicker');
-        // console.info(method)
+        //获取mpicker实例
+        var method= $('.select-value').data('mPicker');
+        console.info('第一个mpicker的实例为：',method);
+        //mpicker方法
         // method.showPicker();
         // method.hide(function(){
         //     console.info(this)
@@ -141,14 +152,45 @@ $('.select-value').mPicker({
             splitStr: '-',
             header: '<div class="mPicker-header">两级联动选择插件</div>',
             confirm: function () {
+                var _this= this;
+                var json=getVal();
+                var valArr=json.value;
+                console.info('【json里有带value的情况】');
+                console.info('更新前的value：', valArr[0] , valArr[1]);
+                console.info('更新前的value拼接值：', json.result);
                 //更新json
-                this.container.data('mPicker').updateData(level3);
-                //console.info($('.select-value').data('value1')+'-'+$('.select-value').data('value2'));
+                console.info('3s后更新json...');
+                setTimeout(function(){
+                    _this.container.data('mPicker').updateData(level3);
+                    json = getVal();
+                    valArr = json.value;
+                    console.info('更新成功!!');
+                    console.info('更新后的value为空', valArr[0], valArr[1]);
+                    console.info('更新后的value拼接值为空', json.result);
+                },3000);
+                
             },
             cancel: function () {
-                //console.info($('.select-value').data('value1')+'-'+$('.select-value').data('value2'));
             }
         })
+        //获取value
+        function getVal(){
+            var value1 = $('.select-value1').data('value1');
+            var value2 = $('.select-value1').data('value2');
+            var result='';
+            value1 = value1 || '';
+            value2 = value2 || '';
+            if(value1){
+                result= value1;
+            }
+            if(value2){
+                result = result+'-'+ value2;
+            }
+            return {
+                value:[value1, value2],
+                result: result
+            };
+        }
 
         /**
          * 不联动的picker
@@ -162,7 +204,7 @@ $('.select-value').mPicker({
             header:'<div class="mPicker-header">非联动选择插件</div>',
             idDefault:true,
             confirm:function(){
-                //console.info($('.select-value2').data('id1')+'-'+$('.select-value2').data('id2')+'-'+$('.select-value2').data('id3'));
+                console.info('选中的value为',$('.select-value2').data('value1')+'-'+$('.select-value2').data('value2'));
             }
         })
 
@@ -177,10 +219,10 @@ $('.select-value').mPicker({
             idDefault:true,
             header:'<div class="mPicker-header">单级选择</div>',
             confirm:function(){
-                //console.info($('.select-value3').data('id1'));
+                console.info('选中的value为', $('.select-value3').data('value1'));
             },
             cancel:function(){
-                //console.info($('.select-value3').data('id1'));
+                console.info('value为', $('.select-value3').data('value1'));
             }
         })
     });
