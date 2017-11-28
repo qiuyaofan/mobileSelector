@@ -116,18 +116,20 @@ $('.select-value1').mPicker({
             idDefault:true,
             splitStr:'-',
             header:'<div class="mPicker-header">三级联动选择插件</div>',
-            confirm:function(){
+            confirm:function(json){
+                console.info('当前选中json：',json);
                 console.info('【json里有不带value时】');
-                console.info('选中的id序号为：',$('.select-value').data('id1')+'-'+$('.select-value').data('id2')+'-'+$('.select-value').data('id3'));
-                var id1= $('.select-value').data('id1');
-                var id2 = $('.select-value').data('id2');
-                var id3 = $('.select-value').data('id3');
-                console.info('第一列json：',city3[id1]);
-                console.info('第二列json：', city3[id1].child[id2]);
-                console.info('第三列json：', city3[id1].child[id2].child[id3]);
+                console.info('选中的id序号为：', json.ids);
+                console.info('选中的value为：', json.values);
+                // var id1= $('.select-value').data('id1');
+                // var id2 = $('.select-value').data('id2');
+                // var id3 = $('.select-value').data('id3');
+                // console.info('第一列json：',city3[id1]);
+                // console.info('第二列json：', city3[id1].child[id2]);
+                // console.info('第三列json：', city3[id1].child[id2].child[id3]);
             },
-            cancel:function(){
-                console.info('返回之前的id序号：',$('.select-value').data('id1')+'-'+$('.select-value').data('id2')+'-'+$('.select-value').data('id3'));
+            cancel:function(json){
+                console.info('当前选中json：',json);
             }
         })
         //获取mpicker实例
@@ -151,26 +153,23 @@ $('.select-value1').mPicker({
             idDefault: true,
             splitStr: '-',
             header: '<div class="mPicker-header">两级联动选择插件</div>',
-            confirm: function () {
+            confirm: function (json) {
+                console.info('当前选中json：', json);
                 var _this= this;
-                var json=getVal();
-                var valArr=json.value;
                 console.info('【json里有带value的情况】');
-                console.info('更新前的value：', valArr[0] , valArr[1]);
-                console.info('更新前的value拼接值：', json.result);
                 //更新json
                 console.info('3s后更新json...');
                 setTimeout(function(){
                     _this.container.data('mPicker').updateData(level3);
-                    json = getVal();
-                    valArr = json.value;
+                    var json = getVal();
+                    var valArr = json.value;
                     console.info('更新成功!!');
                     console.info('更新后的value为空', valArr[0], valArr[1]);
                     console.info('更新后的value拼接值为空', json.result);
                 },3000);
                 
             },
-            cancel: function () {
+            cancel: function (json) {
             }
         })
         //获取value
@@ -203,8 +202,8 @@ $('.select-value1').mPicker({
             Linkage:false,
             header:'<div class="mPicker-header">非联动选择插件</div>',
             idDefault:true,
-            confirm:function(){
-                console.info('选中的value为',$('.select-value2').data('value1')+'-'+$('.select-value2').data('value2'));
+            confirm:function(json){
+                console.info('当前选中json：', json);
             }
         })
 
@@ -218,11 +217,11 @@ $('.select-value1').mPicker({
             rows:6,
             idDefault:true,
             header:'<div class="mPicker-header">单级选择</div>',
-            confirm:function(){
-                console.info('选中的value为', $('.select-value3').data('value1'));
+            confirm:function(json){
+                console.info('当前选中json：', json);
             },
-            cancel:function(){
-                console.info('value为', $('.select-value3').data('value1'));
+            cancel:function(json){
+                console.info('当前选中json：', json);
             }
         })
     });

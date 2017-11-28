@@ -265,7 +265,16 @@ $(function () {
                     self.mpicker.addClass('hide');
                     self.mpicker.find('.mPicker-main').remove();
                     if (typeof (callback) === 'function') {
-                        callback.call(self);
+                        var ids = [];
+                        var values=[];
+                        var name = self.container.val();
+                        for (var level = 1; level <= self.options.level; level++) {
+                            ids.push(self.container.data('id' + level));
+                            values.push(self.container.data('value' + level));
+                        }
+                        ids=ids.join(self.options.splitStr);
+                        values = values.join(self.options.splitStr);
+                        callback.call(self, { values: values, ids: ids, name: name});
                     }
                 });
                 return false;
