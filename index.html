@@ -100,7 +100,7 @@ $('.select-value1').mPicker({
     <script src="js/jquery.js"></script>
     <script src="js/json.js"></script>
     <script src="js/jsonExchange.js"></script>
-    <script src="js/mPickerBeta.js"></script>
+    <script src="js/mPicker.min.js"></script>
     <script chartset="UTF-8">
     $(function() {
         
@@ -137,7 +137,7 @@ $('.select-value1').mPicker({
         console.info('第一个mpicker的实例为：',method);
         //mpicker方法
         // method.showPicker();
-        // method.hide(function(){
+        // method.hidePicker(function(){
         //     console.info(this)
         // });
 
@@ -160,7 +160,7 @@ $('.select-value1').mPicker({
                 //更新json
                 console.info('3s后更新json...');
                 setTimeout(function(){
-                    _this.container.data('mPicker').updateData(level3);
+                    _this.container.data('mPicker').updateData.call(_this,level3);
                     var json = getVal();
                     var valArr = json.value;
                     console.info('更新成功!!');

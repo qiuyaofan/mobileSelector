@@ -7,26 +7,39 @@
 
 ## 参数列表
 
-手机端模拟选择－2级
+手机端模拟选择1－3级
 
-```php
-@param
-level [级别：1，2，3]
-line [显示行数：默认为3]
-height [行高：默认40]
-idDefault [是否填充默认值：默认false]
-splitStr [分割符号：默认’ ‘(例如：’/’,’-‘,’#’)]
-Linkpage [是否联动：默认false]
-dataLink [有联动时的数据（有格式）]
-data1 [一级数据（Linkpage:false时才有用）]
-data2 [二级数据（Linkpage:false时才有用）]
-header [头部代码]
-afterOne:function(){} [选择一级后回调函数]
-afterTwo:function(){} [选择二级后回调函数]
-confirm:function(){} [确定回调]
-cancel:function(){} [取消回调]
-@return deffered{‘show’:fn,’hide’:fn,’updateData’:fn}
-```
+
+
+|参数名|默认值（可选值）|作用|类型|
+|----|-----|-----|-----|
+|level|1（1，2，3）| 设置显示多少级|number|
+| line| 40 |行高|number|
+| idDefault| false| 是否填充默认值|boolean|
+| splitStr | `’ ‘` (例如：’/’,’-‘,’#’)| 分割选中值的符号|string|
+| Linkpage | false | 是否联动| boolean |
+| dataLink | data数组| 数据（当Linkpage：true才有效）|object|
+| data1 | data数组（Linkpage:false时才有用）| 一级数据| object |
+|data2| data数组（Linkpage:false时才有用）| 二级数据| object |
+| header | `<div class="mPicker-header"></div>`| 头部代码|string|
+| afterOne | function(){} | 选择一级后回调函数| function |
+| afterTwo | function(){} | 选择二级后回调函数| function |
+| confirm | function(){} | 确定按钮回调|function|
+| cancel | function(){} | 取消按钮回调| function |
+| 以下为新增的 |
+| jsonName | ‘name’ | json的key值，用于下啦选项的label|string|
+| jsonChild | 'child' | json的key值，渲染时获取的下一级的key| string |
+| jsonValue | 'value' | json的key值，用于下啦选项的value| string |
+
+
+#### 方法
+
+|中文名|方法名|举例|
+|----|-----|-----|
+|更新数据| updateData | $('.select-value').data('mPicker').updateData(新数据的json数组);|
+|显示| showPicker | $('.select-value').data('mPicker').showPicker();|
+|隐藏| hidePicker | $('.select-value').data('mPicker').hidePicker(callback); callback :可选回调函数|
+
 
 ## 组件特色
 
@@ -246,4 +259,6 @@ level3=[
 2016.11.16 重构代码，增加pc端鼠标事件选择
 
 2017.11.06 优化代码，添加三级及以上数据渲染功能
+
+2018.02.03 新增改变json key值的参数，修复行数过少引发的bug
 
